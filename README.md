@@ -1,326 +1,267 @@
 # Ecommerce Microservices Application
 
-Ứng dụng Ecommerce được xây dựng với kiến trúc microservices, bao gồm frontend và 4 backend services độc lập.
+A complete ecommerce platform built with microservices architecture, featuring both admin and client interfaces.
 
-## Kiến trúc
+## Architecture Overview
 
-- **Frontend Service**: ReactJS + Tailwind CSS (Client & Admin interface)
-- **Product Service**: Node.js + Express + MongoDB
-- **Order Service**: Node.js + Express + PostgreSQL
-- **Customer Service**: Node.js + Express + MongoDB
-- **Payment Service**: Node.js + Express + PostgreSQL + Stripe
+This project implements a microservices architecture with the following components:
 
-## Tính năng
+- **Frontend Service**: React.js with Tailwind CSS for both client and admin interfaces
+- **Product Service**: Node.js + Express + MongoDB for product management
+- **Order Service**: Node.js + Express + PostgreSQL for order processing
+- **Customer Service**: Node.js + Express + MongoDB for customer management
+- **Payment Service**: Node.js + Express + PostgreSQL with Stripe integration for payment processing
+
+## Features
 
 ### Admin Dashboard
-- Quản lý sản phẩm (CRUD)
-- Quản lý đơn hàng
-- Quản lý khách hàng
-- Báo cáo doanh thu
+- Product management (CRUD operations)
+- Order management and status updates
+- Customer information management
+- Revenue reports and analytics
+- Inventory tracking
 
 ### Client Store
-- Trang chủ sản phẩm
-- Đăng ký/Đăng nhập
-- Chi tiết sản phẩm
-- Giỏ hàng
-- Thanh toán (Stripe và COD)
-- Lịch sử đơn hàng
+- Product browsing and searching
+- User registration and authentication
+- Shopping cart functionality
+- Checkout with multiple payment options
+- Order history and tracking
 
-## Hướng dẫn chạy dự án
+## Technology Stack
 
-### Cách 1: Chạy với Docker Compose (Khuyến nghị)
+- **Frontend**: React.js, Tailwind CSS, React Router
+- **Backend**: Node.js, Express.js
+- **Databases**: MongoDB (for products and customers), PostgreSQL (for orders and payments)
+- **Payment Processing**: Stripe API integration
+- **Containerization**: Docker and Docker Compose
+- **State Management**: React Context API
+- **Styling**: Tailwind CSS
+- **Notifications**: React-Toastify
 
-1. **Cài đặt Docker và Docker Compose**
+## Getting Started
 
-2. **Clone và chạy dự án**
+### Prerequisites
+- Node.js (v14 or higher)
+- Docker and Docker Compose
+- MongoDB
+- PostgreSQL
+
+### Installation and Setup
+
+#### Using Docker (Recommended)
+
+1. Clone the repository:
 ```bash
-git clone <repository>
-cd ecommerce-microservice
+git clone https://github.com/yourusername/ecommerce-microservices.git
+cd ecommerce-microservices
+```
+
+2. Configure environment variables:
+   - Create `.env` files in each service directory based on the provided examples
+
+3. Start all services with Docker Compose:
+```bash
 docker-compose up --build
 ```
 
-3. **Truy cập ứng dụng**
-- Client: http://localhost:3000/client
-- Admin: http://localhost:3000/admin
-- API endpoints:
-  - Products: http://localhost:3001/api/products
-  - Orders: http://localhost:3002/api/orders
-  - Customers: http://localhost:3003/api/customers
-  - Payments: http://localhost:3004/api/payments
+4. Access the application:
+   - Client interface: http://localhost:3000/client
+   - Admin dashboard: http://localhost:3000/admin
 
-### Cách 2: Chạy Local (Không dùng Docker)
+#### Manual Setup (Without Docker)
 
-#### Yêu cầu
-- Node.js 18+
-- MongoDB
-- PostgreSQL
-- MongoDB Compass (tùy chọn)
-- pgAdmin4 (tùy chọn)
-
-#### 1. Cài đặt cơ sở dữ liệu
-
-**MongoDB**
-- Tạo database `ecommerce_products` và `ecommerce_customers`
-- Tạo collection `products` và `customers`
-
-**PostgreSQL**
-- Tạo database `ecommerce_orders` và `ecommerce_payments`
-- Chạy scripts SQL trong thư mục `models/database.sql` của mỗi service
-
-#### 2. Cài đặt và chạy các services
-
-**Product Service**
+1. Clone the repository:
 ```bash
-cd product-service
-npm install
-npm start
-# Chạy trên port 3001
+git clone https://github.com/yourusername/ecommerce-microservices.git
+cd ecommerce-microservices
 ```
 
-**Order Service**
-```bash
-cd order-service
-npm install
-npm start
-# Chạy trên port 3002
-```
+2. Set up databases:
+   - Create MongoDB databases: `ecommerce_products` and `ecommerce_customers`
+   - Create PostgreSQL databases: `ecommerce_orders` and `ecommerce_payments`
+   - Run the SQL scripts in the `models/database.sql` files
 
-**Customer Service**
-```bash
-cd customer-service
-npm install
-npm start
-# Chạy trên port 3003
-```
+3. Install dependencies and start each service:
 
-**Payment Service**
 ```bash
-cd payment-service
-npm install
-npm start
-# Chạy trên port 3004
-```
-
-**Frontend Service**
-```bash
+# Frontend Service
 cd frontend
 npm install
 npm start
-# Chạy trên port 3000
+
+# Product Service
+cd ../product-service
+npm install
+npm start
+
+# Order Service
+cd ../order-service
+npm install
+npm start
+
+# Customer Service
+cd ../customer-service
+npm install
+npm start
+
+# Payment Service
+cd ../payment-service
+npm install
+npm start
 ```
 
-## Cấu trúc Database
+## Database Setup
 
-### MongoDB Collections
+### MongoDB (for Product and Customer Services)
 
-**Products (ecommerce_products)**
-```javascript
-{
-  _id: ObjectId,
-  name: String,
-  description: String,
-  price: Number,
-  stock: Number,
-  image: String,
-  category: String,
-  isActive: Boolean,
-  createdAt: Date,
-  updatedAt: Date
-}
+1. Install MongoDB Compass
+2. Connect to MongoDB server (mongodb://localhost:27017)
+3. Create two databases:
+   - `ecommerce_products`
+   - `ecommerce_customers`
+4. Run seed scripts to populate with sample data:
+```bash
+cd product-service && npm run seed
+cd customer-service && npm run seed
 ```
 
-**Customers (ecommerce_customers)**
-```javascript
-{
-  _id: ObjectId,
-  name: String,
-  email: String,
-  phone: String,
-  address: String,
-  isActive: Boolean,
-  createdAt: Date,
-  updatedAt: Date
-}
-```
+### PostgreSQL (for Order and Payment Services)
 
-### PostgreSQL Tables
-
-**Orders (ecommerce_orders)**
-```sql
-orders: id, customer_email, total, status, delivery_address, payment_method, created_at, updated_at
-order_items: id, order_id, product_id, name, price, quantity, created_at
-```
-
-**Payments (ecommerce_payments)**
-```sql
-payments: id, order_id, amount, method, status, transaction_id, stripe_payment_id, gateway_response, created_at, updated_at
-```
-
-## Hướng dẫn tạo database thủ công
-
-### MongoDB với MongoDB Compass
-
-1. **Kết nối MongoDB**:
-   - Mở MongoDB Compass
-   - Kết nối đến `mongodb://localhost:27017`
-
-2. **Tạo database và collections**:
-   - Tạo database `ecommerce_products` với collection `products`
-   - Tạo database `ecommerce_customers` với collection `customers`
-
-3. **Thêm dữ liệu mẫu**:
-   - Trong collection `products`, thêm:
-   ```json
-   {
-     "name": "iPhone 14 Pro",
-     "description": "Latest iPhone with Pro camera system",
-     "price": 999,
-     "stock": 50,
-     "image": "https://images.unsplash.com/photo-1678652197829-ae56d8010d26",
-     "category": "Electronics",
-     "isActive": true
-   }
-   ```
-
-   - Trong collection `customers`, thêm:
-   ```json
-   {
-     "name": "John Doe",
-     "email": "john.doe@example.com",
-     "phone": "123-456-7890",
-     "address": "123 Main St, New York, NY 10001",
-     "isActive": true
-   }
-   ```
-
-### PostgreSQL với pgAdmin4
-
-1. **Kết nối PostgreSQL**:
-   - Mở pgAdmin4
-   - Kết nối đến server (localhost:5432, user: postgres, password: password)
-
-2. **Tạo database**:
-   - Tạo database `ecommerce_orders`
-   - Tạo database `ecommerce_payments`
-
-3. **Chạy scripts SQL**:
-   - Trong database `ecommerce_orders`, chạy:
-   ```sql
-   CREATE TABLE IF NOT EXISTS orders (
-       id SERIAL PRIMARY KEY,
-       customer_email VARCHAR(255) NOT NULL,
-       total DECIMAL(10, 2) NOT NULL,
-       status VARCHAR(50) DEFAULT 'pending',
-       delivery_address TEXT,
-       payment_method VARCHAR(50),
-       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-   );
-
-   CREATE TABLE IF NOT EXISTS order_items (
-       id SERIAL PRIMARY KEY,
-       order_id INTEGER REFERENCES orders(id) ON DELETE CASCADE,
-       product_id VARCHAR(255) NOT NULL,
-       name VARCHAR(255) NOT NULL,
-       price DECIMAL(10, 2) NOT NULL,
-       quantity INTEGER NOT NULL,
-       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-   );
-   ```
-
-   - Trong database `ecommerce_payments`, chạy:
-   ```sql
-   CREATE TABLE IF NOT EXISTS payments (
-       id SERIAL PRIMARY KEY,
-       order_id VARCHAR(255) NOT NULL,
-       amount DECIMAL(10, 2) NOT NULL,
-       method VARCHAR(50) NOT NULL,
-       status VARCHAR(50) DEFAULT 'pending',
-       transaction_id VARCHAR(255) UNIQUE,
-       stripe_payment_id VARCHAR(255),
-       gateway_response TEXT,
-       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-   );
-   ```
-
-## Cấu hình Stripe
-
-1. **Đăng ký tài khoản Stripe**:
-   - Tạo tài khoản tại [stripe.com](https://stripe.com)
-
-2. **Lấy API keys**:
-   - Đăng nhập vào tài khoản Stripe
-   - Vào Dashboard > Developers > API keys
-   - Sử dụng "Secret key" (bắt đầu bằng `sk_test_`) cho biến `STRIPE_SECRET_KEY` trong file `.env` của payment-service
-   - Sử dụng "Publishable key" (bắt đầu bằng `pk_test_`) cho biến `REACT_APP_STRIPE_PUBLISHABLE_KEY` trong file `.env` của frontend
-
-3. **Thẻ test của Stripe**:
-   - Thẻ thành công: 4242 4242 4242 4242
-   - Thẻ thất bại: 4000 0000 0000 0002
-   - Ngày hết hạn: Bất kỳ ngày trong tương lai (MM/YY)
-   - CVC: Bất kỳ 3 số
+1. Install pgAdmin 4
+2. Connect to PostgreSQL server (localhost:5432)
+3. Create two databases:
+   - `ecommerce_orders`
+   - `ecommerce_payments`
+4. Execute the SQL scripts from:
+   - `order-service/models/database.sql`
+   - `payment-service/models/database.sql`
 
 ## API Endpoints
 
 ### Product Service (Port 3001)
-- `GET /api/products` - Lấy tất cả sản phẩm
-- `GET /api/products/:id` - Lấy sản phẩm theo ID
-- `POST /api/products` - Tạo sản phẩm mới
-- `PUT /api/products/:id` - Cập nhật sản phẩm
-- `DELETE /api/products/:id` - Xóa sản phẩm
+- `GET /api/products` - Get all products
+- `GET /api/products/:id` - Get product by ID
+- `POST /api/products` - Create product
+- `PUT /api/products/:id` - Update product
+- `DELETE /api/products/:id` - Delete product
 
 ### Order Service (Port 3002)
-- `GET /api/orders` - Lấy tất cả đơn hàng
-- `GET /api/orders/stats` - Lấy thống kê đơn hàng
-- `GET /api/orders/:id` - Lấy đơn hàng theo ID
-- `POST /api/orders` - Tạo đơn hàng mới
-- `PUT /api/orders/:id` - Cập nhật đơn hàng
+- `GET /api/orders` - Get all orders
+- `GET /api/orders/:id` - Get order by ID
+- `POST /api/orders` - Create order
+- `PUT /api/orders/:id` - Update order status
 
 ### Customer Service (Port 3003)
-- `GET /api/customers` - Lấy tất cả khách hàng
-- `GET /api/customers/:id` - Lấy khách hàng theo ID
-- `POST /api/customers` - Tạo khách hàng mới
-- `PUT /api/customers/:id` - Cập nhật khách hàng
+- `GET /api/customers` - Get all customers
+- `GET /api/customers/:id` - Get customer by ID
+- `POST /api/customers` - Create customer
+- `PUT /api/customers/:id` - Update customer
 
 ### Payment Service (Port 3004)
-- `GET /api/payments` - Lấy tất cả thanh toán
-- `GET /api/payments/:id` - Lấy thanh toán theo ID
-- `POST /api/payments` - Xử lý thanh toán
-- `POST /api/payments/:id/refund` - Hoàn tiền
+- `GET /api/payments` - Get all payments
+- `GET /api/payments/:id` - Get payment by ID
+- `POST /api/payments` - Process payment
+- `POST /api/payments/:id/refund` - Refund payment
+
+## Stripe Integration
+
+This project uses Stripe for payment processing. To set up Stripe:
+
+1. Create a Stripe account at [stripe.com](https://stripe.com)
+2. Get your API keys from the Stripe Dashboard
+3. Add your Stripe secret key to the `.env` file in the payment-service directory:
+```
+STRIPE_SECRET_KEY=sk_test_your_key_here
+```
+4. For testing, use Stripe's test card numbers:
+   - Success: 4242 4242 4242 4242
+   - Failure: 4000 0000 0000 0002
+
+## Docker Configuration
+
+The project includes Docker configuration for all services:
+
+- Each service has its own Dockerfile
+- The root directory contains a docker-compose.yml file
+- Docker Compose sets up all services, databases, and networking
+
+## Project Structure
+
+```
+ecommerce-microservices/
+├── frontend/
+│   ├── public/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── contexts/
+│   │   ├── hooks/
+│   │   ├── pages/
+│   │   ├── services/
+│   │   └── utils/
+│   ├── package.json
+│   └── Dockerfile
+├── product-service/
+│   ├── controllers/
+│   ├── models/
+│   ├── routes/
+│   ├── package.json
+│   └── Dockerfile
+├── order-service/
+│   ├── controllers/
+│   ├── models/
+│   ├── routes/
+│   ├── package.json
+│   └── Dockerfile
+├── customer-service/
+│   ├── controllers/
+│   ├── models/
+│   ├── routes/
+│   ├── package.json
+│   └── Dockerfile
+├── payment-service/
+│   ├── controllers/
+│   ├── models/
+│   ├── routes/
+│   ├── package.json
+│   └── Dockerfile
+├── docker-compose.yml
+└── README.md
+```
 
 ## Troubleshooting
 
-### Lỗi thường gặp
+### Common Issues
 
-1. **Port đã được sử dụng**
-```bash
-# Kiểm tra port đang sử dụng
-lsof -i :3000
-# Kill process
-kill -9 <PID>
-```
+1. **Database Connection Errors**:
+   - Ensure MongoDB and PostgreSQL are running
+   - Check connection strings in `.env` files
 
-2. **Lỗi kết nối database**
-- Kiểm tra MongoDB và PostgreSQL đã chạy
-- Kiểm tra connection string trong environment variables
+2. **CORS Issues**:
+   - All services have CORS enabled by default
+   - Check browser console for CORS errors
 
-3. **CORS issues**
-- Đảm bảo tất cả services đã cấu hình CORS
+3. **Port Conflicts**:
+   - Ensure no other services are using the required ports
+   - Check with `lsof -i :<port>` on Unix or `netstat -ano | findstr :<port>` on Windows
 
-4. **Lỗi `_id.slice is not a function`**
-- Đây là lỗi khi hiển thị ID đơn hàng từ PostgreSQL (số nguyên) như một chuỗi
-- Sửa bằng cách kiểm tra kiểu dữ liệu: `typeof id === 'string' ? id.slice(-8) : id`
+4. **Payment Processing Errors**:
+   - Verify Stripe API keys
+   - Use Stripe test mode and test cards
 
-## Technology Stack
+## Contributing
 
-- **Frontend**: ReactJS, Tailwind CSS, HTML5
-- **Backend**: Node.js, Express.js
-- **Databases**: MongoDB, PostgreSQL
-- **Payment**: Stripe API
-- **Containerization**: Docker, Docker Compose
-- **Architecture**: Microservices, REST API
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature-name`
+3. Commit your changes: `git commit -m 'Add some feature'`
+4. Push to the branch: `git push origin feature-name`
+5. Submit a pull request
 
 ## License
 
-MIT License
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments
+
+- This project was created as a demonstration of microservices architecture
+- Thanks to all the open-source libraries and frameworks used in this project
