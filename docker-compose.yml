@@ -1,0 +1,140 @@
+version: '3.8'
+
+services:
+  # Frontend Service
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - REACT_APP_STRIPE_PUBLISHABLE_KEY=pk_test_your_publishable_key
+    depends_on:
+      - product-service
+      - order-service
+      - customer-service
+      - payment-service
+
+  # Product Service
+  product-service:
+    build: ./product-service
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./product-service:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - MONGODB_URI=mongodb://mongo-products:27017/ecommerce_products
+    depends_on:
+      - mongo-products
+
+  # Order Service
+  order-service:
+    build: ./order-service
+    ports:
+      - "3002:3002"
+    volumes:
+      - ./order-service:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - DB_HOST=postgres-orders
+      - DB_NAME=ecommerce_orders
+      - DB_USER=postgres
+      - DB_PASSWORD=password
+      - DB_PORT=5432
+    depends_on:
+      - postgres-orders
+
+  # Customer Service
+  customer-service:
+    build: ./customer-service
+    ports:
+      - "3003:3003"
+    volumes:
+      - ./customer-service:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - MONGODB_URI=mongodb://mongo-customers:27017/ecommerce_customers
+    depends_on:
+      - mongo-customers
+
+  # Payment Service
+  payment-service:
+    build: ./payment-service
+    ports:
+      - "3004:3004"
+    volumes:
+      - ./payment-service:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - DB_HOST=postgres-payments
+      - DB_NAME=ecommerce_payments
+      - DB_USER=postgres
+      - DB_PASSWORD=password
+      - DB_PORT=5432
+      - STRIPE_SECRET_KEY=sk_test_your_stripe_secret_key
+    depends_on:
+      - postgres-payments
+
+  # MongoDB for Products
+  mongo-products:
+    image: mongo:6.0
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-products-data:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=ecommerce_products
+
+  # MongoDB for Customers
+  mongo-customers:
+    image: mongo:6.0
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo-customers-data:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=ecommerce_customers
+
+  # PostgreSQL for Orders
+  postgres-orders:
+    image: postgres:15
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-orders-data:/var/lib/postgresql/data
+      - ./order-service/models/database.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      - POSTGRES_DB=ecommerce_orders
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+
+  # PostgreSQL for Payments
+  postgres-payments:
+    image: postgres:15
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres-payments-data:/var/lib/postgresql/data
+      - ./payment-service/models/database.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      - POSTGRES_DB=ecommerce_payments
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+
+volumes:
+  mongo-products-data:
+  mongo-customers-data:
+  postgres-orders-data:
+  postgres-payments-data:
+
+networks:
+  default:
+    driver: bridge
